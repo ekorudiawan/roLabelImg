@@ -14,6 +14,8 @@ try:
     from PyQt5.QtCore import *
     from PyQt5.QtWidgets import *
 except ImportError:
+    print("Import PyQt5 error")
+    '''
     # needed for py3+qt4
     # Ref:
     # http://pyqt.sourceforge.net/Docs/PyQt4/incompatible_apis.html
@@ -23,7 +25,7 @@ except ImportError:
         sip.setapi('QVariant', 2)
     from PyQt4.QtGui import *
     from PyQt4.QtCore import *
-
+    '''
 import resources
 # Add internal libs
 dir_name = os.path.abspath(os.path.dirname(__file__))
@@ -435,7 +437,9 @@ class MainWindow(QMainWindow, WindowMixin):
             }
 
         self.settings = settings = Settings(types)
-        self.recentFiles = list(settings.get('recentFiles', []))
+        # self.recentFiles = list(settings.get('recentFiles', []))
+        self.recentFiles = []
+        print("Recent files :", self.recentFiles)
         size = settings.get('window/size', QSize(600, 500))
         position = settings.get('window/position', QPoint(0, 0))
         self.resize(size)
