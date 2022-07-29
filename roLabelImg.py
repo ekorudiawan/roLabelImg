@@ -438,7 +438,11 @@ class MainWindow(QMainWindow, WindowMixin):
 
         self.settings = settings = Settings(types)
         # self.recentFiles = list(settings.get('recentFiles', []))
-        self.recentFiles = []
+        # self.recentFiles = []
+        if(settings.get('recentFiles') is not None):
+            self.recentFiles = list(settings.get('recentFiles'))
+        else:
+            self.recentFiles = []
         print("Recent files :", self.recentFiles)
         size = settings.get('window/size', QSize(600, 500))
         position = settings.get('window/position', QPoint(0, 0))
@@ -776,6 +780,8 @@ class MainWindow(QMainWindow, WindowMixin):
                 print ('Img: ' + self.filePath + ' -> Its xml: ' + annotationFilePath)
                 self.labelFile.savePascalVocFormat(annotationFilePath, shapes, self.filePath, self.imageData,
                                                    self.lineColor.getRgb(), self.fillColor.getRgb())
+                self.labelFile.saveDRBoxFormat(annotationFilePath, shapes, self.filePath)
+                print("shapes :", shapes)
             else:
                 self.labelFile.save(annotationFilePath, shapes, self.filePath, self.imageData,
                                     self.lineColor.getRgb(), self.fillColor.getRgb())
