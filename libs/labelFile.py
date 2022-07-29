@@ -48,11 +48,11 @@ class LabelFile(object):
             points = shape['points']
             label = shape['label']
             # Add Chris
-            difficult = int(shape['difficult'])           
+            difficult = int(shape['difficult'])
             direction = shape['direction']
             isRotated = shape['isRotated']
             # if shape is normal box, save as bounding box 
-            # print('direction is %lf' % direction)
+            print('direction is %lf' % math.degrees(direction))
             if not isRotated:
                 bndbox = LabelFile.convertPoints2BndBox(points)
                 writer.addBndBox(bndbox[0], bndbox[1], bndbox[2], 
@@ -63,6 +63,20 @@ class LabelFile(object):
                     robndbox[2],robndbox[3],robndbox[4],label,difficult)
 
         writer.save(targetFile=filename)
+        return
+    
+    def saveDRBoxFormat(self, filename, shapes, imagePath):
+        imgFolderPath = os.path.dirname(imagePath)
+        imgFolderName = os.path.split(imgFolderPath)[-1]
+        imgFileName = os.path.basename(imagePath)
+        imgFileNameWithoutExt = os.path.splitext(imgFileName)[0]
+        rbox_filename = filename.replace("xml", "rbox")
+        with open(rbox_filename, 'w') as label_file:
+            for shape in shapes:
+                label = shape['label']
+                robndbox = LabelFile.convertPoints2RotatedBndBox(shape)
+                label_file.writelines(str(robndbox[0]) + " " + str(robndbox[1]) + " " + str(robndbox[2]) + " " + str(robndbox[3]) + " " + str(label) + " " + str(math.degrees(robndbox[4])))
+                label_file.writelines('\n')
         return
 
     def toggleVerify(self):
